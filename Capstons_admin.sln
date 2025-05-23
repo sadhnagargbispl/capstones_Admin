@@ -1,0 +1,42 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34622.214
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "Capstons_admin", ".", "{759EF1AD-8CB8-4557-AD2A-9225E5DFC4A9}"
+	ProjectSection(WebsiteProperties) = preProject
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.7.2"
+		Debug.AspNetCompiler.VirtualPath = "/localhost_63023"
+		Debug.AspNetCompiler.PhysicalPath = "..\Capstons_admin\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_63023\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/localhost_63023"
+		Release.AspNetCompiler.PhysicalPath = "..\Capstons_admin\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_63023\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		VWDPort = "63023"
+		SlnRelativePath = "..\Capstons_admin\"
+		DefaultWebSiteLanguage = "Visual C#"
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{759EF1AD-8CB8-4557-AD2A-9225E5DFC4A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{759EF1AD-8CB8-4557-AD2A-9225E5DFC4A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {74B8595C-869F-41B1-83B0-7F21C32F7BF1}
+	EndGlobalSection
+EndGlobal
