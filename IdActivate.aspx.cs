@@ -42,7 +42,7 @@ public partial class IdActivate : System.Web.UI.Page
         try
         {
             Sql = Objdal.IsoStart + " Select kitId,KitName From " + Objdal.DBName + "..M_KitMaster" +
-                  " Where  RowStatus='Y' and KitId=4 " + condition + "  Order By kitName" + Objdal.IsoEnd;
+                  " Where  RowStatus='Y' and KitId=3 " + condition + "  Order By kitName" + Objdal.IsoEnd;
 
             DataTable Dt = SqlHelper.ExecuteDataset(constr1, CommandType.Text, Sql).Tables[0];
 
