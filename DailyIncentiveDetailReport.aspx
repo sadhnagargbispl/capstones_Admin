@@ -103,15 +103,15 @@
                                                                     <asp:Label ID="LblMemberName" runat="server" Text='<%# Eval("mem_Name") %>'></asp:Label><br />
                                                                 </ItemTemplate>
                                                             </asp:TemplateField>
-                                                            <asp:TemplateField HeaderText="Daily Stacking Bonus" SortExpression="Daily Stacking Bonus">
+                                                            <%--<asp:TemplateField HeaderText="Daily Stacking Bonus" SortExpression="Daily Stacking Bonus">
                                                                 <ItemTemplate>
                                                                     <a href='<%# "ViewSelfIncome.aspx?formno=" + Eval("FormNo") + "&SessId=" + Eval("SessId") %>'
                                                                         onclick="return openPopup(this)">
                                                                         <asp:Label ID="Label1" runat="server" ForeColor="Blue" Text='<%# Eval("SelfIncome") %>'></asp:Label>
                                                                     </a>
                                                                 </ItemTemplate>
-                                                            </asp:TemplateField>
-                                                            <asp:TemplateField HeaderText="Direct Bonus" SortExpression="Direct Bonus">
+                                                            </asp:TemplateField>--%>
+                                                            <asp:TemplateField HeaderText="Direct Bonus" SortExpression="Direct  Referral Bonus">
                                                                 <ItemTemplate>
                                                                     <a href='<%# "ViewdirectIncome.aspx?formno=" + Eval("FormNo") + "&SessId=" + Eval("SessId") %>'
                                                                         onclick="return openPopup(this)">
@@ -127,7 +127,7 @@
                                                                     </a>
                                                                 </ItemTemplate>
                                                             </asp:TemplateField>
-                                                            <asp:TemplateField HeaderText="Award & Reward Bonus" SortExpression="Rank Bonus">
+                                                            <asp:TemplateField HeaderText="Award & Reward Bonus" SortExpression="Rank Achievement Bonus">
                                                                 <ItemTemplate>
                                                                     <a href='<%# "ViewRankIncome.aspx?formno=" + Eval("FormNo") + "&SessId=" + Eval("SessId") %>'
                                                                         onclick="return openPopup(this)">
