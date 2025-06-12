@@ -71,6 +71,25 @@ partial class img : System.Web.UI.Page
                     Cancel.Visible = false;
                 }
             }
+            else if (Request["Type"] == "PoolPayment")
+            {
+                sql = "select case When ScannedFile='' then '" + Session["CompWeb"] + "Images/no_photo.jpg' else '" + Session["CompWeb"] + "/images/UploadImage/'+ ScannedFile" + " end as ImageLnk1 from PoolWalletReq  where Reqno='" + Request["ID"] + "'";
+                dt = new DataTable();
+                //obj = new DAL();
+                //dt = obj.GetData(sql);
+                dt = new DataTable();
+                dt = SqlHelper.ExecuteDataset(constr, CommandType.Text, sql).Tables[0];
+                if (dt.Rows.Count > 0)
+                {
+                    Image1.ImageUrl = dt.Rows[0]["ImageLnk1"].ToString();
+                    LblNewPic.Visible = false;
+                    LblPic.Visible = false;
+                    LblUpdatePic.Visible = false;
+                    ImageUpload.Visible = false;
+                    Upload.Visible = false;
+                    Cancel.Visible = false;
+                }
+            }
             else if (Request["Type"] == "PinRequest")
             {
                 sql = "select case When Imgpath='' then '" + Session["CompWeb"] + "Images/no_photo.jpg' else '" + Session["CompWeb"] + "/images/UploadImage/'+ ImgPath" + " end as ImageLnk1 from TrnPinReqMain  where Reqno='" + Request["ID"] + "'";

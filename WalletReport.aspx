@@ -87,13 +87,12 @@
                                             <div style="margin-top: 20px; margin-bottom: 20px;">
 
                                                 <asp:Label ID="lblCount" runat="server" Style="font-weight: bold; font-size: 14px; color: black; margin-right: 10px"></asp:Label>
-                                                 <asp:Label ID="LabelEarningWallet" runat="server" Style="font-weight: bold; font-size: 16px; color: black; margin-right: 10px"></asp:Label>
-                                                 <asp:Label ID="LabelPointWallet" runat="server" Style="font-weight: bold; font-size: 16px; color: black; margin-right: 10px" Visible="false"></asp:Label>
-                                                      <asp:Label ID="LabelEarning" runat="server" Style="font-weight: bold; font-size: 16px; color: black; margin-right: 10px"></asp:Label>
-                                             <asp:Label ID="LabelFundWallet" runat="server" Style="font-weight: bold; font-size: 16px; color: black; margin-right: 10px"></asp:Label>
-                                          <asp:Label ID="LabelProductWallet" runat="server" Style="font-weight: bold; font-size: 16px; color: black; margin-right: 10px" Visible="false" ></asp:Label>
-                                                 
-                                                 
+                                                <asp:Label ID="LabelEarningWallet" runat="server" Style="font-weight: bold; font-size: 16px; color: black; margin-right: 10px"></asp:Label>
+                                                <asp:Label ID="LabelFundWallet" runat="server" Style="font-weight: bold; font-size: 16px; color: black; margin-right: 10px"></asp:Label>
+                                                <asp:Label ID="LabelProductWallet" runat="server" Style="font-weight: bold; font-size: 16px; color: black; margin-right: 10px"></asp:Label>
+                                                <asp:Label ID="LabelPointWallet" runat="server" Style="font-weight: bold; font-size: 16px; color: black; margin-right: 10px"></asp:Label>
+                                                <asp:Label ID="LblPool" runat="server" Style="font-weight: bold; font-size: 16px; color: black; margin-right: 10px"></asp:Label>
+
                                                 <br />
                                                 <asp:Label ID="LblCredit" runat="server" Style="font-weight: bold; font-size: 14px; color: Gray; margin-right: 10px"></asp:Label>
                                                 <asp:Label ID="lblDebit" runat="server" Style="font-weight: bold; font-size: 14px; color: Gray; margin-right: 10px"></asp:Label>

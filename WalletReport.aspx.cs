@@ -193,10 +193,11 @@ public partial class WalletReport : System.Web.UI.Page
             ViewState["Sort_Order"] = "ASC";
             if (recordCount > 0)
             {
-                int LabelWorking = Convert.ToInt32(Ds.Tables[2].Rows[0]["FundWalletBal"]);
-                //int LabelProduct = Convert.ToInt32(Ds.Tables[2].Rows[0]["ProductWalletBal"]);
-                int LabelEarning = Convert.ToInt32(Ds.Tables[2].Rows[0]["EarningWalletBal"]);
-                //int LabelPoint = Convert.ToInt32(Ds.Tables[2].Rows[0]["PointWalletBal1"]);
+                int EarningWalletBalance = Convert.ToInt32(Ds.Tables[2].Rows[0]["EarningWalletBalance"]);
+                int FundWalletBalance = Convert.ToInt32(Ds.Tables[2].Rows[0]["FundWalletBalance"]);
+                int RedemptionWalletBalance = Convert.ToInt32(Ds.Tables[2].Rows[0]["RedemptionWalletBalance"]);
+                int SalaryWalletBalance = Convert.ToInt32(Ds.Tables[2].Rows[0]["SalaryWalletBalance"]);
+                int PoolWalletBalance = Convert.ToInt32(Ds.Tables[2].Rows[0]["PoolWalletBalance"]);
                 for (int i = 0; i < GvData.Columns.Count; i++)
                 {
                     TableCell tableCell = GvData.HeaderRow.Cells[i];
@@ -208,11 +209,11 @@ public partial class WalletReport : System.Web.UI.Page
                 GvData.Visible = true;
                 gvContainer.Visible = true;
                 lblCount.Text = "Total : " + recordCount;
-
-                LabelFundWallet.Text = "Fund Wallet Balance : " + LabelWorking;
-                //LabelProductWallet.Text = "Product Wallet Balance  : " + LabelProduct;
-                LabelEarningWallet.Text = "Earning Wallet Balance   : " + LabelEarning;
-                //LabelPointWallet.Text = "Point Wallet Balance   : " + LabelEarning;
+                LabelEarningWallet.Text = "Earning Wallet Balance   : " + EarningWalletBalance;
+                LabelFundWallet.Text = "Fund Wallet Balance : " + FundWalletBalance;
+                LabelProductWallet.Text = "Redemption Wallet Balance  : " + RedemptionWalletBalance;
+                LabelPointWallet.Text = "Salary Wallet Balance   : " + SalaryWalletBalance;
+                LblPool.Text = "Pool Wallet Balance   : " + PoolWalletBalance;
             }
             else
             {
