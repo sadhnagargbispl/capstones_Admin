@@ -175,7 +175,7 @@ public partial class BVpoint : System.Web.UI.Page
 
         // Remove modify and delete columns from the grid
         GvData.HeaderRow.Cells[GvData.HeaderRow.Cells.Count - 1].Visible = false;
-        GvData.HeaderRow.Cells[GvData.HeaderRow.Cells.Count - 2].Visible = false;
+        //GvData.HeaderRow.Cells[GvData.HeaderRow.Cells.Count - 2].Visible = false;
 
         for (int i = 0; i <GvData.Rows.Count; i++)
         {
