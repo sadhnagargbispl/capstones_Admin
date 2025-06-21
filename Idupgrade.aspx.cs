@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -105,22 +106,39 @@ public partial class Idupgrade : System.Web.UI.Page
                 LblKitName.Text = Dt_.Rows[0]["KitName"].ToString();
 
                 //if (Dt_.Rows[0]["ActiveStatus"].ToString() == "Y")
-                if (Dt_.Rows[0]["Kitid"].ToString() == "26" || Dt_.Rows[0]["Kitid"].ToString() == "27" || Dt_.Rows[0]["Kitid"].ToString() == "28" || Dt_.Rows[0]["Kitid"].ToString() == "29" || Dt_.Rows[0]["Kitid"].ToString() == "30")
+                string currentKitId = Dt_.Rows[0]["Kitid"].ToString();
+                // Check if already upgraded (in AllowedUpgradeKits)
+                if (IsKitIdInTable(currentKitId, "AllowedUpgradeKits"))
                 {
                     LblCondition.Text = " and TopupSeq>='" + Dt_.Rows[0]["TopupSeq"].ToString() + "'";
-
-                    scrName = "<SCRIPT language='javascript'>alert('This Id already upgrade.');location.replace('Idupgrade.aspx');</SCRIPT>";
+                    scrName = "<SCRIPT language='javascript'>alert('This Id is already upgraded.');location.replace('Idupgrade.aspx');</SCRIPT>";
                     ScriptManager.RegisterClientScriptBlock(this.Page, this.GetType(), "Login Error", scrName, false);
                     return false;
                 }
-                else if (Dt_.Rows[0]["Kitid"].ToString() == "21" || Dt_.Rows[0]["Kitid"].ToString() == "22" || Dt_.Rows[0]["Kitid"].ToString() == "23" || Dt_.Rows[0]["Kitid"].ToString() == "24" || Dt_.Rows[0]["Kitid"].ToString() == "25")
+                // Check if not eligible for upgrade (not in AllowedBaseKits)
+                else if (!IsKitIdInTable(currentKitId, "AllowedBaseKits"))
                 {
                     LblCondition.Text = " and TopupSeq>='" + Dt_.Rows[0]["TopupSeq"].ToString() + "'";
-
-                    scrName = "<SCRIPT language='javascript'>alert('This Id do not upgrade.');location.replace('Idupgrade.aspx');</SCRIPT>";
+                    scrName = "<SCRIPT language='javascript'>alert('This Id is not eligible for upgrade.');location.replace('Idupgrade.aspx');</SCRIPT>";
                     ScriptManager.RegisterClientScriptBlock(this.Page, this.GetType(), "Login Error", scrName, false);
                     return false;
                 }
+                //if (Dt_.Rows[0]["Kitid"].ToString() == "26" || Dt_.Rows[0]["Kitid"].ToString() == "27" || Dt_.Rows[0]["Kitid"].ToString() == "28" || Dt_.Rows[0]["Kitid"].ToString() == "29" || Dt_.Rows[0]["Kitid"].ToString() == "30")
+                //{
+                //    LblCondition.Text = " and TopupSeq>='" + Dt_.Rows[0]["TopupSeq"].ToString() + "'";
+
+                //    scrName = "<SCRIPT language='javascript'>alert('This Id already upgrade.');location.replace('Idupgrade.aspx');</SCRIPT>";
+                //    ScriptManager.RegisterClientScriptBlock(this.Page, this.GetType(), "Login Error", scrName, false);
+                //    return false;
+                //}
+                //else if (Dt_.Rows[0]["Kitid"].ToString() == "21" || Dt_.Rows[0]["Kitid"].ToString() == "22" || Dt_.Rows[0]["Kitid"].ToString() == "23" || Dt_.Rows[0]["Kitid"].ToString() == "24" || Dt_.Rows[0]["Kitid"].ToString() == "25")
+                //{
+                //    LblCondition.Text = " and TopupSeq>='" + Dt_.Rows[0]["TopupSeq"].ToString() + "'";
+
+                //    scrName = "<SCRIPT language='javascript'>alert('This Id do not upgrade.');location.replace('Idupgrade.aspx');</SCRIPT>";
+                //    ScriptManager.RegisterClientScriptBlock(this.Page, this.GetType(), "Login Error", scrName, false);
+                //    return false;
+                //}
                 else
                 {
                     LblCondition.Text = "";
@@ -158,6 +176,16 @@ public partial class Idupgrade : System.Web.UI.Page
             // Handle the exception
             return false;
         }
+    }
+    private bool IsKitIdInTable(string kitId, string tableName)
+    {
+        string query = "SELECT COUNT(1) FROM " + Objdal.DBName + ".." + tableName + " WHERE KitId = @KitId";
+        SqlParameter[] param = {
+        new SqlParameter("@KitId", kitId)
+    };
+
+        int count = Convert.ToInt32(SqlHelper.ExecuteScalar(constr1, CommandType.Text, query, param));
+        return count > 0;
     }
     protected void BtnUpgrade_Click(object sender, EventArgs e)
     {
