@@ -113,17 +113,13 @@ public partial class PoolReport : System.Web.UI.Page
                 GvData1.DataSource = Ds.Tables[0];
                 GvData1.PageSize = Convert.ToInt32(ddlPageSize.SelectedValue);
                 GvData1.DataBind();
-
-                //int recordCount = Convert.ToInt32(prms[7].Value);
                 int recordCount = Convert.ToInt32(Ds.Tables[1].Rows[0]["Recordcount"].ToString());
-                
                 Session["PoolReport"] = Ds.Tables[0];
                 ViewState["IdNo"] = Idno;
                 ViewState["Sort_Order"] = "ASC";
 
                 lblCount.Text = "Total Record: " + recordCount.ToString();
                 lblCount.Visible = true;
-                //lblinv.Text = "Total Investment: " + Ds.Tables[0].Compute("SUM(Investment)", "").ToString();
                 lblinv.Text = "Total Amount: " + Ds.Tables[1].Rows[0]["Total"].ToString();
                 lblinv.Visible = true;
                 GvData1.Visible = true;
