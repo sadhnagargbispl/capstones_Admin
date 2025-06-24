@@ -1,5 +1,6 @@
 <%@ Page Title="" Language="C#" MasterPageFile="~/MasterPage.master" AutoEventWireup="true" CodeFile="FundWithdraw.aspx.cs" Inherits="FundWithdraw" %>
 
+<%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="AjaxToolkit" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
     <script type="text/javascript">
         function confirmation() {
@@ -83,10 +84,6 @@
                                         <asp:TextBox ID="txtMemId" runat="server" class="form-control" Style="display: inline"></asp:TextBox>
                                     </div>
                                     <div class="col-md-3">
-                                        Wallet Address :
-     <asp:TextBox ID="TxtWalletAddress" runat="server" class="form-control" Style="display: inline"></asp:TextBox>
-                                    </div>
-                                    <div class="col-md-3">
                                         From Date :
                                 <asp:TextBox ID="txtStartDate" runat="server" class="form-control"></asp:TextBox>
                                         <ajaxToolkit:CalendarExtender ID="CalendarExtender1" runat="server" TargetControlID="txtStartDate"
@@ -109,7 +106,7 @@
 
                                     <div class="col-md-3">
                                         Status :
-                                        <asp:DropDownList ID="RbtStatus" runat="server" class="form-control" RepeatDirection="Horizontal" RepeatLayout="Flow" AutoPostBack="true" OnSelectedIndexChanged="RbtStatus_SelectedIndexChanged">
+                                        <asp:DropDownList ID="RbtStatus" runat="server" class="form-control" RepeatDirection="Horizontal" RepeatLayout="Flow">
                                             <asp:ListItem Text="All" Value="N" Selected="True"></asp:ListItem>
                                             <asp:ListItem Text="Approve" Value="A"></asp:ListItem>
                                             <asp:ListItem Text="Rejected" Value="R"></asp:ListItem>
@@ -256,7 +253,7 @@
                                                     <asp:TextBox ID="TxtARemark" runat="server" TextMode="MultiLine"></asp:TextBox>
                                                 </td>
                                             </tr>
-                                            <tr style="display: none">
+                                            <tr>
                                                 <td>
                                                     <asp:Button ID="btnApprove" runat="server" class="buttonBG" Text="Approve" Visible="false" />
                                                     <asp:Button ID="btnReject" runat="server" Text="Reject " class="ButtonBG" Visible="false" />
@@ -272,13 +269,20 @@
                                             </tr>
                                         </table>
                                     </div>
-                                    <div class="col-md-3" style="padding: 18px;">
-                                        <asp:Button ID="BtnShow" runat="server" class="btn btn-primary" Text="Show Detail" OnClick="BtnShow_Click" />
-                                        <asp:Button ID="btnExport" runat="server" class="btn btn-primary" Text="Export To Excel" OnClick="btnExport_Click" />
-                                    </div>
                                 </div>
                                 <asp:Label ID="lblErr" runat="server" Style="font-weight: bold; font-size: 12px; color: Red"></asp:Label>
+                                <div class="col-12" style="padding: 10px;">
 
+                                    <asp:Button ID="BtnShow" runat="server" class="btn btn-primary" Text="Show Detail" OnClick="BtnShow_Click" />
+                                    <asp:Button ID="btnExport" runat="server" class="btn btn-primary" Text="Export To Excel" OnClick="btnExport_Click" />
+                                    <asp:Button ID="btnviapprove" runat="server" Text="ViApprove" class="btn btn-primary"
+                                        OnClick="btnviapprove_Click" Visible="false" />
+                                    <asp:Button ID="BtnApproveAll" runat="server" Text="Approve" class="btn btn-primary"
+                                        OnClick="BtnApproveAll_Click" />
+                                    <asp:Button ID="btnRejectAll" runat="server" Text="RejectAll" class="btn btn-primary"
+                                        OnClick="btnRejectAll_Click" />
+
+                                </div>
                                 <div class="col-md-12">
                                     <asp:Label ID="lblError" runat="server" Text="" ForeColor="Red" Visible="false" Font-Size="13px"></asp:Label>
                                 </div>
@@ -288,15 +292,12 @@
 
                                             <div style="margin-top: 20px; margin-bottom: 20px;">
 
-                                                <asp:Label ID="lblCount" runat="server" Style="font-weight: bold; font-size: 14px; color: Gray; margin-right: 10px"></asp:Label>
-                                                <br />
+                                                <asp:Label ID="lblCount" runat="server" Style="font-weight: bold; font-size: 18px; color: Black; margin-right: 10px"></asp:Label>
+
                                                 <asp:Label ID="Lblamount" runat="server" Style="font-weight: bold; font-size: 18px; color: Black; margin-right: 10px"></asp:Label>
                                                 <asp:Label ID="lbladmincharge" runat="server" Style="font-weight: bold; font-size: 18px; color: Black; margin-right: 10px"></asp:Label>
                                                 <asp:Label ID="lbltdscharge" runat="server" Style="font-weight: bold; font-size: 18px; color: Black; margin-right: 10px"></asp:Label>
                                                 <asp:Label ID="Lblnetamount" runat="server" Style="font-weight: bold; font-size: 18px; color: Black; margin-right: 10px"></asp:Label>
-                                                <asp:Label ID="LblCredit" runat="server" Style="font-weight: bold; font-size: 14px; color: Gray; margin-right: 10px"></asp:Label>
-                                                <asp:Label ID="lblDebit" runat="server" Style="font-weight: bold; font-size: 14px; color: Gray; margin-right: 10px"></asp:Label>
-                                                <asp:Label ID="LblBalance" runat="server" Style="font-weight: bold; font-size: 14px; color: Gray; margin-right: 10px"></asp:Label>
                                             </div>
                                             <div id="gvContainer" runat="server" style="overflow: scroll; margin-top: 25px; margin-left: 25px; margin-bottom: 25px;">
                                                 <asp:GridView ID="GvData" Width="100%" runat="server" AllowPaging="true" GridLines="Both" class="table table-bordered" HeaderStyle-CssClass="bg-primary"
@@ -337,7 +338,7 @@
                                                                 <asp:Label ID="LblDate" runat="server" Text='<%# Eval("WithDrawDate") %>'></asp:Label>
                                                             </ItemTemplate>
                                                         </asp:TemplateField>
-                                                        <asp:TemplateField HeaderText="ID">
+                                                        <asp:TemplateField HeaderText="Member ID">
                                                             <ItemTemplate>
                                                                 <asp:Label ID="LblIDNo" runat="server" Text='<%# Eval("MemberID") %>'></asp:Label>
                                                             </ItemTemplate>
@@ -352,27 +353,32 @@
                                                                 <asp:Label ID="LblPayeeName" runat="server" Text='<%# Eval("PayeeName") %>'></asp:Label>
                                                             </ItemTemplate>
                                                         </asp:TemplateField>
-                                                        <%--<asp:TemplateField HeaderText="Requested BHTS">--%>
-                                                        <asp:TemplateField HeaderText="Requested USDT">
+                                                        <asp:TemplateField HeaderText="Requested Amount">
                                                             <ItemTemplate>
                                                                 <asp:Label ID="LblAmount" runat="server" Text='<%# Eval("Amount") %>'></asp:Label>
                                                             </ItemTemplate>
                                                         </asp:TemplateField>
-
-                                                        <asp:TemplateField HeaderText="BHTS Rate">
+                                                       <%-- <asp:TemplateField HeaderText="TDS Charge">
                                                             <ItemTemplate>
-                                                                <asp:Label ID="lblAdminCharge" runat="server" Text='<%# Eval("CoinRate") %>'></asp:Label>
+                                                                <asp:Label ID="lblTdsAmount" runat="server" Text='<%# Eval("TdsAmount") %>'></asp:Label>
+                                                            </ItemTemplate>
+                                                        </asp:TemplateField>--%>
+                                                        <asp:TemplateField HeaderText="Service Fees">
+                                                            <ItemTemplate>
+                                                                <asp:Label ID="lblAdminCharge" runat="server" Text='<%# Eval("AdminCharge") %>'></asp:Label>
                                                             </ItemTemplate>
                                                         </asp:TemplateField>
-                                                      <%--  <asp:TemplateField HeaderText="USDT">--%>
-                                                          <asp:TemplateField HeaderText="BHTS">
+                                                        <asp:TemplateField HeaderText="Released Amount">
                                                             <ItemTemplate>
-                                                                <asp:Label ID="lblNetAmount" runat="server" Text='<%# Eval("DeductForProductWalletFinal") %>'></asp:Label>
+                                                                <asp:Label ID="lblNetAmount" runat="server" Text='<%# Eval("NetAmount") %>'></asp:Label>
                                                             </ItemTemplate>
                                                         </asp:TemplateField>
+                                                        <asp:BoundField DataField="bankname" HeaderText="Bank Name" />
+                                                        <asp:BoundField DataField="branchname" HeaderText="Branch Name" />
+                                                        <asp:BoundField DataField="PanNo" HeaderText="Pan No" />
+                                                        <asp:BoundField DataField="IFSCode" HeaderText="IFSCode" />
+                                                        <asp:BoundField DataField="AcNo" HeaderText="Account No." />
 
-                                                        <asp:BoundField DataField="PanNo" HeaderText="BHTS Address" />
-                                                        <asp:BoundField DataField="txnhash" HeaderText="Txn Hash" />
                                                         <asp:BoundField DataField="Status" HeaderText="Status" />
                                                         <asp:TemplateField HeaderText="Remarks">
                                                             <ItemTemplate>
@@ -380,9 +386,9 @@
                                                                     Enabled='<%# Convert.ToBoolean(Eval("IsVisible")) %>'></asp:TextBox>
                                                             </ItemTemplate>
                                                         </asp:TemplateField>
-                                                       <%-- <asp:BoundField DataField="ProcessedBy" HeaderText="Processed By" />
+                                                        <asp:BoundField DataField="ProcessedBy" HeaderText="Processed By" />
                                                         <asp:BoundField DataField="ProcessedDate" HeaderText="Processed Date" />
-                                                        <asp:BoundField DataField="WeekNo" HeaderText="Week No." Visible="false" />--%>
+                                                        <asp:BoundField DataField="WeekNo" HeaderText="Week No." Visible="false" />
                                                     </Columns>
                                                     <PagerSettings Mode="NumericFirstLast" />
                                                     <PagerStyle CssClass="pagination-ys" />
