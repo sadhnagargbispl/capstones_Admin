@@ -122,14 +122,18 @@ public partial class PoolReport : System.Web.UI.Page
                 ViewState["Sort_Order"] = "ASC";
 
                 lblCount.Text = "Total Record: " + recordCount.ToString();
+                lblCount.Visible = true;
                 //lblinv.Text = "Total Investment: " + Ds.Tables[0].Compute("SUM(Investment)", "").ToString();
                 lblinv.Text = "Total Investment: " + Ds.Tables[1].Rows[0]["Total"].ToString();
+                lblinv.Visible = true;
                 GvData1.Visible = true;
             }
             else
             {
                 lblError.Text = "No Record Found!!";
                 GvData1.Visible = false;
+                lblCount.Visible = false;
+                lblinv.Visible = false;
             }
         }
         catch (Exception Ex)
