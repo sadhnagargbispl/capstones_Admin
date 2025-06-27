@@ -40,7 +40,7 @@
                                     <div class="col-md-12">
                                         <div class="row">
                                             <div class="col-md-2">
-                                                <asp:Label ID="Label2" runat="server" Text="Rank "></asp:Label>
+                                                <asp:Label ID="Label2" runat="server" Text="Package "></asp:Label>
                                                 <asp:DropDownList ID="ddlstate" runat="server" class="form-control">
                                                 </asp:DropDownList>
                                             </div>
