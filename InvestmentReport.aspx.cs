@@ -24,7 +24,8 @@ public partial class InvestmentReport : System.Web.UI.Page
                 if (Session["AStatus"] != null)
                 {
                     Fillkit();
-                    Filltype();
+                    //Filltype();
+                    FilLpack();
                 }
                 else
                 {
@@ -62,6 +63,25 @@ public partial class InvestmentReport : System.Web.UI.Page
             ddltype.DataValueField = "id";
             ddltype.DataTextField = "type";
             ddltype.DataBind();
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message);
+        }
+    }
+    private void FilLpack()
+    {
+        try
+        {
+            //string sql = "Exec Sp_VoucherKit";
+            //dtData = SqlHelper.ExecuteDataset(constr, CommandType.Text, sql).Tables[0];
+            Ds = SqlHelper.ExecuteDataset(constr, "Sp_franchiseKit");
+            ddltype.DataSource = Ds.Tables[0];
+            ddltype.DataTextField = "KitName";
+            ddltype.DataValueField = "KitID";
+            ddltype.DataBind();
+
+            //ddltype.Items.Insert(0, new ListItem("--Select Kit Name--", "0"));
         }
         catch (Exception ex)
         {

@@ -46,7 +46,7 @@
                                     <div class="col-md-2">
                                         Type:
            <asp:DropDownList ID="ddltype" runat="server" class="form-control"
-               AutoPostBack="True" OnSelectedIndexChanged="ddlPageSize_SelectedIndexChanged">
+                OnSelectedIndexChanged="ddlPageSize_SelectedIndexChanged">
            </asp:DropDownList>
                                     </div>
                                     <div class="col-md-2">

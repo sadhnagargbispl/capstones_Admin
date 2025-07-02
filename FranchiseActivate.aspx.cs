@@ -89,7 +89,7 @@ public partial class FranchiseActivate : System.Web.UI.Page
                 {
                     LblCondition.Text = " and TopupSeq>='" + Dt_.Rows[0]["TopupSeq"].ToString() + "'";
 
-                    //scrName = "<SCRIPT language='javascript'>alert('This Id already activate 0 Pin Activation.');location.replace('PackageActivate.aspx');</SCRIPT>";
+                    //scrName = "<SCRIPT language='javascript'>alert('This Id already activate 0 Pin Activation.');location.replace('FranchiseActivate.aspx');</SCRIPT>";
                     //ScriptManager.RegisterClientScriptBlock(this.Page, this.GetType(), "Login Error", scrName, false);
                     //return false;
                 }
@@ -168,7 +168,7 @@ public partial class FranchiseActivate : System.Web.UI.Page
                                 return;
                             }
                         }
-                        if (Convert.ToInt32(txtAmount.Text) >= 10)
+                        if (Convert.ToInt32(txtAmount.Text) >= 9)
                         {
                             if (long.TryParse(txtAmount.Text, out long amount))
                             {
@@ -182,7 +182,7 @@ public partial class FranchiseActivate : System.Web.UI.Page
                                 }
                             }
 
-                            if (Objdal.SaveData(Sql) != 0)
+                            if (Objdal.SaveData(Sql) > 0)
                             {
                                 Objdal = new DAL();
                                 Sql = "; insert into UserHistory(UserId,UserName,PageName,Activity,ModifiedFlds,RecTimeStamp,memberId)Values" +
