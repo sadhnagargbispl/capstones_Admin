@@ -67,14 +67,16 @@
                                             <asp:ListItem Value="Salary">Salary</asp:ListItem>
                                         </asp:DropDownList>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-6" style=" display: none;" >
                                         <label>BV Type:</label>
                                         <asp:DropDownList ID="RbtType" RepeatLayout="Flow" runat="server" class="form-control" ValidationGroup="Save" AutoPostBack="true"  OnSelectedIndexChanged="RbtType_SelectedIndexChanged">
-                                            <asp:ListItem Text="Self" Value="S" Selected="True">Self</asp:ListItem>
-                                            <asp:ListItem Text="Tree" Value="V">Tree</asp:ListItem>
+                                             <asp:ListItem Text="Self" Value="S"  Selected="True">Self</asp:ListItem>
+                                            <asp:ListItem Text="Tree" Value="T">Tree</asp:ListItem>
+                                            
+                                           
                                         </asp:DropDownList>
                                     </div>
-                                    <div class="col-md-6" style="padding: 10px;">
+                                    <div class="col-md-6" style=" display: none;" >
                                         <label>Leg No:</label>
                                         <asp:DropDownList ID="RbtLeg" RepeatLayout="Flow" runat="server" class="form-control">
                                             <asp:ListItem Text="Left" Value="1" Selected="True"></asp:ListItem>

@@ -20,8 +20,8 @@
                                 <div align="center">
                                     <div class="col-md-12">
                                         <br />
-                                        <asp:Button ID="btnPrintCurrent" runat="server" Text="Print Current Page" class="btn btn-primary" OnClick="btnPrintCurrent_Click" />
-                                        <asp:Button ID="btnPrintAll" runat="server" Text="Print All Pages" class="btn btn-primary" OnClick="btnPrintAll_Click" />
+                                       <%-- <asp:Button ID="btnPrintCurrent" runat="server" Text="Print Current Page" class="btn btn-primary" OnClick="btnPrintCurrent_Click" />
+                                        <asp:Button ID="btnPrintAll" runat="server" Text="Print All Pages" class="btn btn-primary" OnClick="btnPrintAll_Click" />--%>
                                         <asp:Button ID="btnExport" runat="server" class="btn btn-primary" Text="Export To Excel" OnClick="btnExport_Click" />
                                         
                                             <asp:Button ID="BtnAddNew" runat="server" class="btn btn-primary" Text="Add Virtual BV" OnClick="BtnAddNew_Click" />
