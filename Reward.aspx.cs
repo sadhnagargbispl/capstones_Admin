@@ -157,21 +157,18 @@ public partial class Reward : System.Web.UI.Page
     {
         try
         {
-       
-            string Condition = "";
             string formno = "";
-            string scrName = "";
             string condition1 = "";
             string condition2 = "";
-
+            string condition = "";
             if (Chkmemid.Checked)
             {
                 formno = GetFormNo();
-                Condition += " And d.Formno='" + Convert.ToInt32(formno) + "'";
+                condition += " And d.Formno='" + Convert.ToInt32(formno) + "'";
             }
             if (ddllist.SelectedValue != "0")
             {
-                Condition += " And b.Rankid='" + ddllist.SelectedValue + "'";
+                condition += " And b.Rankid='" + ddllist.SelectedValue + "'";
             }
             if (txtStartDate.Text != "")
             {
@@ -181,19 +178,23 @@ public partial class Reward : System.Web.UI.Page
             {
                 condition2 = " And Cast(Convert(varchar,C.FrmDate,106) as DateTime)<='" + txtEndDate.Text + "'";
             }
-
             string qry1 = "";
-            qry1 = ObjDal.IsoStart + " Select * from " + ObjDal.DBName + "..V#RewardNewWhere 1=1 "+ ObjDal.IsoEnd;
-            Dt = SqlHelper.ExecuteDataset (constr ,CommandType.Text, qry1).Tables[0];
-          if(Dt.Rows.Count > 0 )
+            qry1 = "Select d.Idno as [Member IDNo],d.MemFirstName [Member Name],";
+            qry1 += "d.mobl as [Mobile No.],e.Idno [Sponser IDNo],e.MemFirstName as [Sponser Name],";
+            qry1 += "b.Rank as [Rank Name],b.Reward,Replace(Convert(Varchar,Isnull(c.ToDate,Getdate()),106),' ','-') as [Achieve Date] ";
+            qry1 += "from MstRankAchievers as A left join MstRanks As b on a.RankID = b.RankiD ";
+            qry1 += "left join D_SessnMaster as c on a.SessID = c.SessID ";
+            qry1 += " Left join M_memberMaster as d on a.formno = d.formno ";
+            qry1 += "Left Join M_memberMaster as e on e.formno = d.refformno Where 1=1 " + condition + " ";
+            qry1 += " " + condition1 + " " + condition2 + " order by a.sessid desc";
+            Dt = SqlHelper.ExecuteDataset(constr, CommandType.Text, qry1).Tables[0];
+            if (Dt.Rows.Count > 0)
             {
                 GvData1.DataSource = Dt;
                 GvData1.DataBind();
                 Session["GData"] = Dt;
-                
-            }
 
-          
+            }   
             ExportExcel();
         }
         catch (Exception ex)
@@ -206,15 +207,15 @@ public partial class Reward : System.Web.UI.Page
     {
         try
         {
-            DataTable dt = (DataTable)Session["GData1"];
+            DataTable dt = (DataTable)Session["GData"];
             using (XLWorkbook wb = new XLWorkbook())
             {
-                wb.Worksheets.Add(dt, "DailyIncentiveDetailReport");
+                wb.Worksheets.Add(dt, "Reward");
                 Response.Clear();
                 Response.Buffer = true;
                 Response.Charset = "";
                 Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-                Response.AddHeader("content-disposition", "attachment;filename=DailyIncentiveDetailReport.xlsx");
+                Response.AddHeader("content-disposition", "attachment;filename=RewardReport.xlsx");
                 using (MemoryStream MyMemoryStream = new MemoryStream())
                 {
                     wb.SaveAs(MyMemoryStream);
