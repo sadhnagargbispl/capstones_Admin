@@ -60,6 +60,19 @@ public partial class AddBvpoint : System.Web.UI.Page
     {
         try
         {
+            lblError.Text = "";
+            BtnFundTransfer.Enabled = false;
+            if (string.IsNullOrWhiteSpace(TxtIDNo.Text))
+            {
+                lblError.Text = "Enter Member ID.";
+                return;
+            }
+            else if (Convert.ToDecimal(TxtFund.Text) <= 0)
+            {
+                lblError.Text = "Enter BV Value.";
+                return;
+            }
+
             int updateeffect;
             string StrSql = "Insert into Trnactivecadmin (Transid,Rectimestamp) values(" + HdnCheckTrnns.Value + ",getdate())";
             updateeffect = objDAL.SaveData(StrSql);
@@ -69,40 +82,22 @@ public partial class AddBvpoint : System.Web.UI.Page
                 string query = "";
                 string formNo = TxtFormNo.Text;
                 string voucherNo = "";
-                string scrName;
-
-                lblError.Text = "";
-                BtnFundTransfer.Enabled = false;
-                if (string.IsNullOrWhiteSpace(TxtIDNo.Text))
-                {
-                    lblError.Text = "Enter Member ID.";
-                    return;
-                }
-                else if (Convert.ToDecimal(TxtFund.Text) <= 0)
-                {
-                    lblError.Text = "Enter BV Value.";
-                    return;
-                }
-
+                string scrName;      
                 string remark = "";
-
                 query = "INSERT INTO TrnBV(Sessid, Formno, LegNo, BV, Remark, RecTimeStamp, ActiveStatus,Bvtype,Dsessid,type) VALUES " +
-                        "('" + Session["CurrentSessn"] + "', '" + Convert.ToInt32(TxtFormNo.Text) + "', '" + Convert.ToInt32(RbtLeg.SelectedValue) + "', " +
+                        "('" + Session["CurrentSessn"] + "', '" + Convert.ToInt32(TxtFormNo.Text) + "', '100000', " +
                         "'" + Convert.ToDecimal(TxtFund.Text) + "', '" + TxtRemarks.Text + "', GETDATE(), 'Y','" + RbtType.SelectedValue + "', CONVERT(VARCHAR, GETDATE(), 112),'" + rbtranktype.SelectedValue + "')";
                 if (RbtType.SelectedValue == "T")
                 {
                     query += ";INSERT INTO Repurchincome(Sessid, Formno, BillNo, Billdate, Repurchincome, Imported, BillType, SoldBy, MSessid, KitId, Dsessid, Remarks,PVValue) " +
-                             "VALUES ('" + Session["CurrentSessn"] + "', '" + Convert.ToInt32(TxtFormNo.Text) + "', '', GETDATE(), 0, 'N', 'T', 'WR', " +
-                             "'" + Session["CurrentSessn"] + "', 0, CONVERT(VARCHAR, GETDATE(), 112), '" + TxtRemarks.Text.Trim() + "','" + Convert.ToDecimal(TxtFund.Text) + "')";
+                             "VALUES ('" + Session["CurrentSessn"] + "', '" + Convert.ToInt32(TxtFormNo.Text) + "', '" + HdnCheckTrnns.Value + "', GETDATE(), '" + Convert.ToDecimal(TxtFund.Text) + "', 'N', 'T', 'WR', " +
+                             "'" + Session["CurrentSessn"] + "', 0, CONVERT(VARCHAR, GETDATE(), 112), '" + TxtRemarks.Text.Trim() + "',0)";
                 }
 
                 if (objDAL.SaveData(query) != 0)
                 {
-                    // SSendsms();
-
-                    //scrName = "<script language='javascript'>alert('BV Point Added in " + RbtLeg.SelectedItem.Text + " Successfully!!');</script>";
-                    //ScriptManager.RegisterClientScriptBlock(this.Page, this.GetType(), "Upgraded", scrName, false);
-                    ScriptManager.RegisterStartupScript(this, this.GetType(), "Key", "alert('BV Point Added in " + RbtLeg.SelectedItem.Text + " Successfully!!');location.replace('BVpoint.aspx');", true);
+                    
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "Key", "alert('Vartual Business Added Successfully!!');location.replace('BVpoint.aspx');", true);
 
                     // Clear inputs and labels
                     TxtFund.Text = "";

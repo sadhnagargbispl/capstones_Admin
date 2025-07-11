@@ -59,14 +59,12 @@ public partial class BVpoint : System.Web.UI.Page
         if (dtData.Rows.Count > 0)
         {
             btnExport.Enabled = true;
-            btnPrintAll.Enabled = true;
-            btnPrintCurrent.Enabled = true;
+            
         }
         else
         {
             btnExport.Enabled = false;
-            btnPrintAll.Enabled = false;
-            btnPrintCurrent.Enabled = false;
+           
         }
     }
     protected void btnShowRecord_Click(object sender, EventArgs e)
