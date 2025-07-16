@@ -68,7 +68,7 @@ public partial class FranchiseIncomeReport : System.Web.UI.Page
             prms[4] = new SqlParameter("@PageSize", 100000000);
             prms[5] = new SqlParameter("@IsExport", "N");
             prms[6] = new SqlParameter("@RecordCount", SqlDbType.Int);
-            Ds = SqlHelper.ExecuteDataset(constr, "sp_GetFranchiseIncomeDetail", prms);
+            Ds = SqlHelper.ExecuteDataset(constr1, "sp_GetFranchiseIncomeDetail", prms);
             GvData1.DataSource = Ds.Tables[0];
             GvData1.PageSize = Convert.ToInt32(ddlPageSize.SelectedValue);
             GvData1.DataBind();
@@ -125,7 +125,7 @@ public partial class FranchiseIncomeReport : System.Web.UI.Page
             prms[4] = new SqlParameter("@PageSize", 100000000);
             prms[5] = new SqlParameter("@IsExport", "Y");
             prms[6] = new SqlParameter("@RecordCount", SqlDbType.Int);
-            Ds = SqlHelper.ExecuteDataset(constr, "sp_GetFranchiseIncomeDetail", prms);
+            Ds = SqlHelper.ExecuteDataset(constr1, "sp_GetFranchiseIncomeDetail", prms);
             Session["FranchiseBonus"] = Ds.Tables[0];
             ExportExcel();
         }
