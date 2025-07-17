@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MasterPage.master" AutoEventWireup="true" CodeFile="Pool1Income.aspx.cs" Inherits="Pool1Income" %>
+<%@ Page Title="" Language="C#" MasterPageFile="~/MasterPage.master" AutoEventWireup="true" CodeFile="Pool1Income.aspx.cs" Inherits="Pool1Income" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="AjaxToolkit" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
@@ -25,7 +25,7 @@
 
 
 
-                                    <div class="col-md-2">
+                                    <div class="col-md-3">
                                         <br />
                                         <asp:Button ID="BtnShow" runat="server" class="btn btn-primary" Text="Show Detail" OnClick="BtnShow_Click" />
                                          <asp:Button ID="AddLevel" runat="server" class="btn btn-primary" Text="Open Level" OnClick="AddLevel_Click"  />
