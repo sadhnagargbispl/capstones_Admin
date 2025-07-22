@@ -82,10 +82,11 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-3">
+                                    <div class="col-md-5">
                                         <asp:Button ID="BtnSearch" runat="server" class="btn btn-primary" Text="Search" OnClick="BtnSearch_Click" />
                                         <asp:Button ID="btnApproove" runat="server" class="btn btn-primary" Text="Approve" Visible="false" OnClick="btnApproove_Click" />
                                         <asp:Button ID="BtnRejects" runat="server" class="btn btn-primary" Text="Reject" Visible="false" OnClick="BtnRejects_Click" />
+                                        <asp:Button ID="btnExport" runat="server" class="btn btn-primary" Text="Export To Excel" Visible ="false" OnClick="btnExport_Click" />
                                     </div>
                                 </div>
 

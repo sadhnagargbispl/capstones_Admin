@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Configuration;
 using System.Data;
 using System.Text;
@@ -119,11 +119,13 @@ public partial class ApprovePaymentReqs : System.Web.UI.Page
             {
                 btnApproove.Visible = true;
                 BtnRejects.Visible = true;
+                btnExport.Visible = true;
             }
             else
             {
                 btnApproove.Visible = false;
                 BtnRejects.Visible = false;
+                btnExport.Visible = false;
             }
         }
         catch (Exception ex)
@@ -186,10 +188,14 @@ public partial class ApprovePaymentReqs : System.Web.UI.Page
                 {
                     if (AprvType == "Y")
                     {
-
                         Remark = " Approve Payment Request On ReqNo:" + lblReqno.Text + " for Idno:" + lblIdno.Text + "";
-                        sql = sql + "INSERT INTO RejtVoucher(VoucherNo,VoucherDate,DrTo,CrTo,Amount,Narration,RefNo,AcType,VTYpe,SessID,WSessID,Status,Rn) SELECT ISNULL(Max(VoucherNo)+1,1001),'" + DateTime.Now.ToString("dd-MMM-yyyy") + "'," +
-                            "'0','" + lbl.Text + "'," + LblAmount.Text + ",'Amount Added by Payment  Req.No.:" + lblReqno.Text + ".','Req/" + lblReqno.Text + "','S','C',Convert(Varchar,Getdate(),112),'" + Session["CurrentSessn"] + "','A',1 FROM TrnVoucher;";
+                        sql = sql + "INSERT INTO TrnVoucher(VoucherNo,VoucherDate,DrTo,CrTo,Amount,Narration,RefNo,AcType,VTYpe,SessID,WSessID) SELECT ISNULL(Max(VoucherNo)+1,1001),'" + DateTime.Now.ToString("dd-MMM-yyyy") + "'," +
+                            "'0','" + lbl.Text + "'," + LblAmount.Text + ",'Amount Added by Payment  Req.No.:" + lblReqno.Text + ".','Req/" + lblReqno.Text + "','S','C',Convert(Varchar,Getdate(),112),'" + Session["CurrentSessn"] + "' FROM TrnVoucher;";
+
+
+
+                        //sql = sql + "INSERT INTO RejtVoucher(VoucherNo,VoucherDate,DrTo,CrTo,Amount,Narration,RefNo,AcType,VTYpe,SessID,WSessID,Status,Rn) SELECT ISNULL(Max(VoucherNo)+1,1001),'" + DateTime.Now.ToString("dd-MMM-yyyy") + "'," +
+                        //    "'0','" + lbl.Text + "'," + LblAmount.Text + ",'Amount Added by Payment  Req.No.:" + lblReqno.Text + ".','Req/" + lblReqno.Text + "','S','C',Convert(Varchar,Getdate(),112),'" + Session["CurrentSessn"] + "','A',1 FROM TrnVoucher;";
                     }
                     else
                     {
@@ -215,18 +221,31 @@ public partial class ApprovePaymentReqs : System.Web.UI.Page
             }
             if (a != 0 && Cnt > 0)
             {
-                lblMsg.Text = "" + Cnt + " Requests " + MsgTxt + " Successfully.";
-                lblMsg.Visible = true;
+                //lblMsg.Text = "" + Cnt + " Requests " + MsgTxt + " Successfully.";
+                //lblMsg.Visible = true;
+                //lblMsg.ForeColor = System.Drawing.Color.Green;
+                //TxtARemark.Text = "";
+                //BindData();
+                //Response.Redirect("ApprovePaymentReqs.aspx");
+                lblMsg.Text = Cnt + " Requests " + MsgTxt + " Successfully.";
                 lblMsg.ForeColor = System.Drawing.Color.Green;
-                TxtARemark.Text = "";
-                BindData();
-                Response.Redirect("ApprovePaymentReqs.aspx");
+                lblMsg.Visible = false;
+                DivRemark.Visible = false;
+                string message = Cnt + " Requests " + MsgTxt + " Successfully.";
+                string script = "alert('" + message + "'); window.location.href='ApprovePaymentReqs.aspx';";
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "alertRedirect", script, true);
             }
             else
             {
+                //lblMsg.Text = "Not " + MsgTxt;
+                //lblMsg.Visible = true;
+                //lblMsg.ForeColor = System.Drawing.Color.Red;
                 lblMsg.Text = "Not " + MsgTxt;
-                lblMsg.Visible = true;
+                DivRemark.Visible = false;
                 lblMsg.ForeColor = System.Drawing.Color.Red;
+                string message = Cnt + " Requests " + MsgTxt + " Successfully.";
+                string script = "alert('" + message + "'); window.location.href='ApprovePaymentReqs.aspx';";
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "alertRedirect", script, true);
             }
         }
         catch (Exception ex)
@@ -309,5 +328,66 @@ public partial class ApprovePaymentReqs : System.Web.UI.Page
             throw new Exception(Ex.Message);
         }
         return StrObj;
+    }
+
+    protected void btnExport_Click(object sender, EventArgs e)
+    {
+        try
+        {
+            DataGrid dg = new DataGrid();
+            string idno = "";
+            string startDate;
+            string endDate;
+            DataTable dtData = new DataTable();
+            DateTime currentDate = DateTime.Now;
+            string formattedDate = currentDate.ToString("dd-MMM-yyyy");
+            idno = !string.IsNullOrWhiteSpace(ClearInject(TxtMemID.Text)) ? ClearInject(TxtMemID.Text) : "";
+            if (string.IsNullOrWhiteSpace(ClearInject(txtStartDate.Text)))
+            {
+                startDate = "12-oct-2017";
+            }
+            else
+            {
+                startDate = ClearInject(txtStartDate.Text);
+            }
+            if (string.IsNullOrWhiteSpace(txtEndDate.Text))
+            {
+                endDate = formattedDate;
+            }
+            else
+            {
+                endDate = ClearInject(txtEndDate.Text);
+            }
+            string sql = objDAL.IsoStart + "exec Sp_GetWalletApproveReport '" + idno + "','" + startDate + "','" + endDate + "',";
+            sql += "'" + RbtStatus.SelectedValue + "','Y','" + ddlPayment.SelectedValue + "'" + objDAL.IsoEnd;
+            DataTable dtTemp = new DataTable();
+            dtTemp = SqlHelper.ExecuteDataset(constr1, CommandType.Text, sql).Tables[0];
+            dg.DataSource = dtTemp;
+            dg.DataBind();
+
+            ExportToExcel("Approvepaymentrequest.xls", dg);
+        }
+        catch (Exception ex)
+        {
+            // Handle exception (log it, show a message, etc.)
+        }
+    }
+    private void ExportToExcel(string strFileName, DataGrid dg)
+    {
+        System.IO.StringWriter sw = new System.IO.StringWriter();
+        System.Web.UI.HtmlTextWriter htw;
+
+        Response.Clear();
+        Response.Buffer = true;
+        Response.ContentType = "application/vnd.ms-excel";
+        Response.AddHeader("content-disposition", "attachment;filename=" + strFileName);
+        Response.Charset = "";
+
+        dg.EnableViewState = false;
+        htw = new System.Web.UI.HtmlTextWriter(sw);
+        dg.RenderControl(htw);
+
+        Response.Write(sw.ToString());
+        Response.End();
     }
 }
