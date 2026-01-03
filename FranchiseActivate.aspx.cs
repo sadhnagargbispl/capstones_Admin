@@ -267,20 +267,20 @@ public partial class FranchiseActivate : System.Web.UI.Page
     {
         try
         {
-            string str = "exec sp_checkinv '" + TxtIDNo.Text + "' ";
-            DataTable DT = new DataTable();
-            DT = SqlHelper.ExecuteDataset(constr, CommandType.Text, str).Tables[0];
-            if (DT.Rows.Count > 0)
-            {
-                if ((Convert.ToInt32 (txtAmount.Text) <= Convert.ToInt32(DT.Rows[0]["repurch"])))
-                {
-                    scrName = "<SCRIPT language='javascript'>alert('The investment should be more than last investment!!');" + "</SCRIPT>";
-                    ScriptManager.RegisterClientScriptBlock(this.Page, this.GetType(), "Upgraded", scrName, false);
-                    txtAmount.Text = "";
-                    BtnUpgrade.Enabled = false;
-                    return;
-                }
-            }
+            //string str = "exec sp_checkinv '" + TxtIDNo.Text + "' ";
+            //DataTable DT = new DataTable();
+            //DT = SqlHelper.ExecuteDataset(constr, CommandType.Text, str).Tables[0];
+            //if (DT.Rows.Count > 0)
+            //{
+            //    if ((Convert.ToInt32 (txtAmount.Text) <= Convert.ToInt32(DT.Rows[0]["repurch"])))
+            //    {
+            //        scrName = "<SCRIPT language='javascript'>alert('The investment should be more than last investment!!');" + "</SCRIPT>";
+            //        ScriptManager.RegisterClientScriptBlock(this.Page, this.GetType(), "Upgraded", scrName, false);
+            //        txtAmount.Text = "";
+            //        BtnUpgrade.Enabled = false;
+            //        return;
+            //    }
+            //}
             if (Convert.ToInt32(txtAmount.Text) <= 9)
             {
                 scrName = "<SCRIPT language='javascript'>alert('The investment should be more than 10 !!');" + "</SCRIPT>";
