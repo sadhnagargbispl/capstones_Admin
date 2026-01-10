@@ -76,7 +76,7 @@
                             <div class="card-header">
                                 <h3 class="card-title">Franchise Withdrawal </h3>
                             </div>
-
+                            <asp:HiddenField ID="HdnCheckTrnns" runat="server" />
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-3">

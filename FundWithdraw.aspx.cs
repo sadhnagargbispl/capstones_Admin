@@ -239,11 +239,18 @@ public partial class FundWithdraw : System.Web.UI.Page
             Label LblMobl = new Label();
             Label LblFromDate = new Label();
             Label LblTodate = new Label();
-            string msg = string.Empty;
             TextBox txtRemark = new TextBox();
+            string msg = string.Empty;
             int i = 0;
             string Sql_Str = "Insert into Trnfundtransferbyadmin (Transid) values(" + HdnCheckTrnns.Value + ")";
-            i = Convert.ToInt32(SqlHelper.ExecuteNonQuery(constr, CommandType.Text, Sql_Str));
+            try
+            {
+                i = Convert.ToInt32(SqlHelper.ExecuteNonQuery(constr, CommandType.Text, Sql_Str));
+            }
+            catch (Exception Ex)
+            {
+
+            }
             if (i > 0)
             {
                 foreach (GridViewRow Gvr in GvData.Rows)
@@ -341,7 +348,14 @@ public partial class FundWithdraw : System.Web.UI.Page
             Label LblTodate = new Label();
             int i = 0;
             string Sql_Str = "Insert into Trnfundtransferbyadmin (Transid) values(" + HdnCheckTrnns.Value + ")";
-            i = Convert.ToInt32(SqlHelper.ExecuteNonQuery(constr, CommandType.Text, Sql_Str));
+            try
+            {
+                i = Convert.ToInt32(SqlHelper.ExecuteNonQuery(constr, CommandType.Text, Sql_Str));
+            }
+            catch (Exception Ex)
+            {
+
+            }
             if (i > 0)
             {
                 foreach (GridViewRow Gvr in GvData.Rows)

@@ -25,6 +25,7 @@ public partial class FranchiseWithdraw : System.Web.UI.Page
             btnRejectAll.Attributes.Add("onclick", DisableTheButton(Page, btnRejectAll));
             if (!IsPostBack)
             {
+                HdnCheckTrnns.Value = GenerateRandomString(6);
                 txtMemId.Text = "";
                 GvData.Visible = false;
                 btnExport.Enabled = false;
@@ -44,6 +45,15 @@ public partial class FranchiseWithdraw : System.Web.UI.Page
         {
             ScriptManager.RegisterStartupScript(this, this.GetType(), "alertMessage", "alert('" + ex.Message + "')", true);
         }
+    }
+    public string GenerateRandomString(int iLength)
+    {
+        string sResult = "";
+        string current_datetime = DateTime.Now.ToString("yyyyMMddHHmmssfff");
+        int random_number = new Random().Next(0, 999);
+        string formatted_datetime = current_datetime + random_number.ToString().PadLeft(3, '0');
+        sResult = formatted_datetime;
+        return sResult;
     }
     protected void GvData_RowDataBound(object sender, GridViewRowEventArgs e)
     {
@@ -230,44 +240,63 @@ public partial class FranchiseWithdraw : System.Web.UI.Page
             Label LblFromDate = new Label();
             Label LblTodate = new Label();
             TextBox txtRemark = new TextBox();
-            foreach (GridViewRow Gvr in GvData.Rows)
+            string msg = string.Empty;
+            int i = 0;
+            string Sql_Str = "Insert into Trnfundtransferbyadmin (Transid) values(" + HdnCheckTrnns.Value + ")";
+            try
             {
-                Chk = (CheckBox)Gvr.FindControl("chkSelect");
-                if (Chk.Checked)
+                i = Convert.ToInt32(SqlHelper.ExecuteNonQuery(constr, CommandType.Text, Sql_Str));
+            }
+            catch (Exception Ex)
+            {
+
+            }
+            if (i > 0)
+            {
+                foreach (GridViewRow Gvr in GvData.Rows)
                 {
-                    LblId.Text = ((Label)Gvr.FindControl("LblID")).Text;
-                    TxtIDNo.Text = ((Label)Gvr.FindControl("LblIDNo")).Text;
-                    TxtName.Text = ((Label)Gvr.FindControl("LblPayeeName")).Text;
-                    TxtAmount.Text = ((Label)Gvr.FindControl("LblAmount")).Text;
-                    LblMobl.Text = ((Label)Gvr.FindControl("Lblmobl")).Text;
-                    LnblWeek.Text = ((Label)Gvr.FindControl("LblWeek")).Text;
-                    txtRemark.Text = ((TextBox)Gvr.FindControl("TxtRemarks")).Text;
-                    string Id = ((Label)Gvr.FindControl("LblID")).Text;
-                    string FormNo = ((Label)Gvr.FindControl("LblFormNo")).Text;
-                    string DateOn = ((Label)Gvr.FindControl("LblDate")).Text;
-                    string Remark = "";
-
-                    Remark = "Franchise Withdrawal Approved Of Idno " + TxtIDNo.Text + " For WeekNo:" + LnblWeek.Text + " By " + Session["UserName"];
-                    string Sql = "";
-                    Sql = "Update Franchisewithdrawls Set Status = 'A',IssueDate = GETDATE(),Remark = '" + txtRemark.Text + "',UserId = '" + Session["UserID"] + "',UserName = '" + Session["UserName"] + "' Where ReqID = " + LblId.Text + ";" +
-                          "Update TrnVoucher Set Userid='" + Session["UserId"] + "' Where DrTo='" + FormNo + "' And vtype='F' And VoucherDate='" + DateOn + "' And Narration Like 'Fund Debited Againest Franchise Withdrawal on " + DateOn + " with req. no." + Id + "';" +
-                          " insert into UserHistory(UserId,UserName,PageName,Activity,ModifiedFlds,RecTimeStamp,MemberId)Values" +
-                          "('" + Session["UserID"] + "','" + Session["UserName"] + "','Franchise WithDrawals','Franchise Withdrawls Approve','" + Remark + "',Getdate(),'" + FormNo + "')";
-
-                    cnt1++;
-                    updateeffect = Convert.ToInt32(SqlHelper.ExecuteNonQuery(constr, CommandType.Text, Sql));
-                    cnt++;
-                    if (updateeffect != 0)
+                    Chk = (CheckBox)Gvr.FindControl("chkSelect");
+                    if (Chk.Checked)
                     {
-                        ScriptManager.RegisterStartupScript(this, this.GetType(), "Key", "alert('" + cnt1 + "Franchise Withdrawal Approved Successfully.');", true);
+                        LblId.Text = ((Label)Gvr.FindControl("LblID")).Text;
+                        TxtIDNo.Text = ((Label)Gvr.FindControl("LblIDNo")).Text;
+                        TxtName.Text = ((Label)Gvr.FindControl("LblPayeeName")).Text;
+                        TxtAmount.Text = ((Label)Gvr.FindControl("LblAmount")).Text;
+                        LblMobl.Text = ((Label)Gvr.FindControl("Lblmobl")).Text;
+                        LnblWeek.Text = ((Label)Gvr.FindControl("LblWeek")).Text;
+                        txtRemark.Text = ((TextBox)Gvr.FindControl("TxtRemarks")).Text;
+                        string Id = ((Label)Gvr.FindControl("LblID")).Text;
+                        string FormNo = ((Label)Gvr.FindControl("LblFormNo")).Text;
+                        string DateOn = ((Label)Gvr.FindControl("LblDate")).Text;
+                        string Remark = "";
+
+                        Remark = "Franchise Withdrawal Approved Of Idno " + TxtIDNo.Text + " For WeekNo:" + LnblWeek.Text + " By " + Session["UserName"];
+                        string Sql = "";
+                        Sql = "Update Franchisewithdrawls Set Status = 'A',IssueDate = GETDATE(),Remark = '" + txtRemark.Text + "',UserId = '" + Session["UserID"] + "',UserName = '" + Session["UserName"] + "' Where ReqID = " + LblId.Text + ";" +
+                              "Update TrnVoucher Set Userid='" + Session["UserId"] + "' Where DrTo='" + FormNo + "' And vtype='F' And VoucherDate='" + DateOn + "' And Narration Like 'Fund Debited Againest Franchise Withdrawal on " + DateOn + " with req. no." + Id + "';" +
+                              " insert into UserHistory(UserId,UserName,PageName,Activity,ModifiedFlds,RecTimeStamp,MemberId)Values" +
+                              "('" + Session["UserID"] + "','" + Session["UserName"] + "','Franchise WithDrawals','Franchise Withdrawls Approve','" + Remark + "',Getdate(),'" + FormNo + "')";
+
+                        cnt1++;
+                        updateeffect = Convert.ToInt32(SqlHelper.ExecuteNonQuery(constr, CommandType.Text, Sql));
+                        cnt++;
+                        if (updateeffect != 0)
+                        {
+                            msg = cnt1.ToString() + " Franchise Withdrawal Approved Successfully.!";
+                            // ScriptManager.RegisterStartupScript(this, this.GetType(), "Key", "alert('" + cnt1 + "Franchise Withdrawal Approved Successfully.');", true);
+                        }
+                        else
+                        {
+                            msg = "Server Timeout, Try After Some Time.";
+                        }
                     }
-                    else
-                    {
-                        ScriptManager.RegisterStartupScript(this, this.GetType(), "Key", "alert('Server Timeout, Try After Some Time.');", true);
-                    }
-                    FillDetail();
                 }
             }
+            else
+            {
+                msg = "Try After Some Time.!";
+            }
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "Key", "alert('" + msg + "');location.replace('FranchiseWithdraw.aspx');", true);
         }
         catch (Exception Ex)
         {
@@ -315,61 +344,75 @@ public partial class FranchiseWithdraw : System.Web.UI.Page
             Label LblMobl = new Label();
             Label LblFromDate = new Label();
             Label LblTodate = new Label();
-            // string Remark = "";
-
-            foreach (GridViewRow Gvr in GvData.Rows)
+            int i = 0;
+            string Sql_Str = "Insert into Trnfundtransferbyadmin (Transid) values(" + HdnCheckTrnns.Value + ")";
+            try
             {
-                Chk = (CheckBox)Gvr.FindControl("chkSelect");
-                if (Chk.Checked)
-                {
-                    string Id = ((Label)Gvr.FindControl("LblID")).Text;
-                    string FormNo = ((Label)Gvr.FindControl("LblFormNo")).Text;
-                    string DateOn = ((Label)Gvr.FindControl("LblDate")).Text;
-                    string IdNo = ((Label)Gvr.FindControl("LblIDNo")).Text;
-                    string WeekNo = ((Label)Gvr.FindControl("LblWeek")).Text;
-                    string TxtRemark = ((TextBox)Gvr.FindControl("TxtRemarks")).Text;
-                    string lblAdminCharge = ((Label)Gvr.FindControl("lblAdminCharge")).Text;
-                    string lblNetAmount = ((Label)Gvr.FindControl("lblNetAmount")).Text;
-                    StringBuilder Str_TrnFun = new StringBuilder();
-                    // Prepare remarks for rejected transaction
-                    string Remark = "Request Rejected: Fund Debited Against Franchise Withdrawal with req. no. " + Id;
-                    string RemarkBC = "Request Rejected: Fund Debited Against Franchise Service Fees with req. no. " + Id;
-                    string refNo = "REJECTReq/" + Id;
-                    string voucherDate = DateTime.Now.ToString("dd-MMM-yyyy");
-                    string sessQuery = "(SELECT MAX(SessID) FROM M_SessnMaster)";
-                    // 1. Append UPDATE statement
-                    Str_TrnFun.Append("UPDATE Franchisewithdrawls SET ");
-                    Str_TrnFun.Append("Status = 'R', ");
-                    Str_TrnFun.Append("IssueDate = GETDATE(), ");
-                    Str_TrnFun.Append("Remark = '" + TxtRemark.Replace("'", "''") + "', ");
-                    Str_TrnFun.Append("UserId = '" + Convert.ToString(Session["UserID"]) + "', ");
-                    Str_TrnFun.Append("UserName = '" + Convert.ToString(Session["UserName"]) + "' ");
-                    Str_TrnFun.Append("WHERE ReqID = " + Id + ";");
-                    // 2. Append First INSERT (Withdrawal reversal)
-                    Str_TrnFun.Append("INSERT INTO TrnVoucher(VoucherNo,VoucherDate,DrTo,CrTo,Amount,Narration,RefNo,AcType,VTYpe,SessID,WSessID) ");
-                    Str_TrnFun.Append("SELECT ISNULL(MAX(VoucherNo)+1,1001),'" + voucherDate + "','0','" + FormNo + "',");
-                    Str_TrnFun.Append(Convert.ToDecimal(lblNetAmount) + ",'" + Remark + "','" + refNo + "','F','C',CONVERT(VARCHAR,GETDATE(),112),");
-                    Str_TrnFun.Append(sessQuery + " FROM TrnVoucher;");
-                    // 3. Append Second INSERT (Admin Charge reversal)
-                    Str_TrnFun.Append("INSERT INTO TrnVoucher(VoucherNo,VoucherDate,DrTo,CrTo,Amount,Narration,RefNo,AcType,VTYpe,SessID,WSessID) ");
-                    Str_TrnFun.Append("SELECT ISNULL(MAX(VoucherNo)+1,1001),'" + voucherDate + "','0','" + FormNo + "',");
-                    Str_TrnFun.Append(Convert.ToDecimal(lblAdminCharge) + ",'" + RemarkBC + "','" + refNo + "','F','C',CONVERT(VARCHAR,GETDATE(),112),");
-                    Str_TrnFun.Append(sessQuery + " FROM TrnVoucher;");
-                    updateeffect = SqlHelper.ExecuteNonQuery(constr, CommandType.Text, Str_TrnFun.ToString());
-                    cnt++;
-                }
+                i = Convert.ToInt32(SqlHelper.ExecuteNonQuery(constr, CommandType.Text, Sql_Str));
             }
-            if (updateeffect != 0)
+            catch (Exception Ex)
             {
-                msg = cnt.ToString() + "Franchise Withdrawal Rejected Successfully.!";
-                FillDetail();
+
+            }
+            if (i > 0)
+            {
+                foreach (GridViewRow Gvr in GvData.Rows)
+                {
+                    Chk = (CheckBox)Gvr.FindControl("chkSelect");
+                    if (Chk.Checked)
+                    {
+                        string Id = ((Label)Gvr.FindControl("LblID")).Text;
+                        string FormNo = ((Label)Gvr.FindControl("LblFormNo")).Text;
+                        string DateOn = ((Label)Gvr.FindControl("LblDate")).Text;
+                        string IdNo = ((Label)Gvr.FindControl("LblIDNo")).Text;
+                        string WeekNo = ((Label)Gvr.FindControl("LblWeek")).Text;
+                        string TxtRemark = ((TextBox)Gvr.FindControl("TxtRemarks")).Text;
+                        string lblAdminCharge = ((Label)Gvr.FindControl("lblAdminCharge")).Text;
+                        string lblNetAmount = ((Label)Gvr.FindControl("lblNetAmount")).Text;
+                        StringBuilder Str_TrnFun = new StringBuilder();
+                        // Prepare remarks for rejected transaction
+                        string Remark = "Request Rejected: Fund Debited Against Franchise Withdrawal with req. no. " + Id;
+                        string RemarkBC = "Request Rejected: Fund Debited Against Franchise Service Fees with req. no. " + Id;
+                        string refNo = "REJECTReq/" + Id;
+                        string voucherDate = DateTime.Now.ToString("dd-MMM-yyyy");
+                        string sessQuery = "(SELECT MAX(SessID) FROM M_SessnMaster)";
+                        // 1. Append UPDATE statement
+                        Str_TrnFun.Append("UPDATE Franchisewithdrawls SET ");
+                        Str_TrnFun.Append("Status = 'R', ");
+                        Str_TrnFun.Append("IssueDate = GETDATE(), ");
+                        Str_TrnFun.Append("Remark = '" + TxtRemark.Replace("'", "''") + "', ");
+                        Str_TrnFun.Append("UserId = '" + Convert.ToString(Session["UserID"]) + "', ");
+                        Str_TrnFun.Append("UserName = '" + Convert.ToString(Session["UserName"]) + "' ");
+                        Str_TrnFun.Append("WHERE ReqID = " + Id + ";");
+                        // 2. Append First INSERT (Withdrawal reversal)
+                        Str_TrnFun.Append("INSERT INTO TrnVoucher(VoucherNo,VoucherDate,DrTo,CrTo,Amount,Narration,RefNo,AcType,VTYpe,SessID,WSessID) ");
+                        Str_TrnFun.Append("SELECT ISNULL(MAX(VoucherNo)+1,1001),'" + voucherDate + "','0','" + FormNo + "',");
+                        Str_TrnFun.Append(Convert.ToDecimal(lblNetAmount) + ",'" + Remark + "','" + refNo + "','F','C',CONVERT(VARCHAR,GETDATE(),112),");
+                        Str_TrnFun.Append(sessQuery + " FROM TrnVoucher;");
+                        // 3. Append Second INSERT (Admin Charge reversal)
+                        Str_TrnFun.Append("INSERT INTO TrnVoucher(VoucherNo,VoucherDate,DrTo,CrTo,Amount,Narration,RefNo,AcType,VTYpe,SessID,WSessID) ");
+                        Str_TrnFun.Append("SELECT ISNULL(MAX(VoucherNo)+1,1001),'" + voucherDate + "','0','" + FormNo + "',");
+                        Str_TrnFun.Append(Convert.ToDecimal(lblAdminCharge) + ",'" + RemarkBC + "','" + refNo + "','F','C',CONVERT(VARCHAR,GETDATE(),112),");
+                        Str_TrnFun.Append(sessQuery + " FROM TrnVoucher;");
+                        updateeffect = SqlHelper.ExecuteNonQuery(constr, CommandType.Text, Str_TrnFun.ToString());
+                        cnt++;
+                    }
+                }
+                if (updateeffect != 0)
+                {
+                    msg = cnt.ToString() + "Franchise Withdrawal Rejected Successfully.!";
+                }
+                else
+                {
+                    msg = "Server Timeout, Try After Some Time.!";
+                }
             }
             else
             {
-                msg = "Server Timeout, Try After Some Time.!";
+                msg = "Try After Some Time.!";
             }
-            ScriptManager.RegisterStartupScript(this, this.GetType(), "Key", "alert('" + msg + "');", true);
-            FillDetail();
+
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "Key", "alert('" + msg + "');location.replace('FranchiseWithdraw.aspx');", true);
             DivRemark.Visible = false;
         }
         catch (Exception Ex)
