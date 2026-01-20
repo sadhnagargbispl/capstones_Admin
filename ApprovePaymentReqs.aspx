@@ -35,7 +35,7 @@
                             <div class="card-header">
                                 <h3 class="card-title">Approve Payment Request </h3>
                             </div>
-
+                            <asp:HiddenField ID="HdnCheckTrnns" runat="server" />
                             <div class="card-body">
                                 <div class="row">
                                     <asp:Label ID="lblErr" runat="server" Style="font-weight: bold; font-size: 12px; color: Red"></asp:Label>

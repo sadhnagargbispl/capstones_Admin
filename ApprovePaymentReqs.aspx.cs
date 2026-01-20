@@ -19,6 +19,7 @@ public partial class ApprovePaymentReqs : System.Web.UI.Page
             this.BtnRejects.Attributes.Add("onclick", DisableTheButton(this.Page, this.BtnRejects));
             if (!IsPostBack)
             {
+                HdnCheckTrnns.Value = GenerateRandomString(6);
                 BindPaymode();
                 if (Session["AStatus"] != null)
                 {
@@ -43,6 +44,15 @@ public partial class ApprovePaymentReqs : System.Web.UI.Page
             ScriptManager.RegisterStartupScript(this, this.GetType(), "alertMessage", "alert('" + ex.Message + "')", true);
         }
 
+    }
+    public string GenerateRandomString(int iLength)
+    {
+        string sResult = "";
+        string current_datetime = DateTime.Now.ToString("yyyyMMddHHmmssfff");
+        int random_number = new Random().Next(0, 999);
+        string formatted_datetime = current_datetime + random_number.ToString().PadLeft(3, '0');
+        sResult = formatted_datetime;
+        return sResult;
     }
     private string DisableTheButton(Control pge, Control btn)
     {
@@ -175,78 +185,96 @@ public partial class ApprovePaymentReqs : System.Web.UI.Page
             int Cnt = 0;
             string Remark = "";
             string email = "";
-            foreach (GridViewRow Gvr in GvData.Rows)
+            int i = 0;
+            string Sql_Str = "Insert into Trnfundtransferbyadmin (Transid) values(" + HdnCheckTrnns.Value + ")";
+            try
             {
-                Chk = (CheckBox)Gvr.FindControl("chkSelect");
-                lbl = (Label)Gvr.FindControl("LblGrpID");
-                lblReqno = (Label)Gvr.FindControl("LblReqNo");
-                lblIdno = (Label)Gvr.FindControl("LblIdNo");
-                LblAmount = (Label)Gvr.FindControl("lblAmount");
-                lblPaymode = (Label)Gvr.FindControl("LblPaymode");
-                email = ((Label)Gvr.FindControl("LblEmail")).Text;
-                if (Chk.Checked == true && Chk.Enabled == true)
+                i = Convert.ToInt32(SqlHelper.ExecuteNonQuery(constr, CommandType.Text, Sql_Str));
+            }
+            catch (Exception ex)
+            {
+
+            }
+            if (i > 0)
+            {
+                foreach (GridViewRow Gvr in GvData.Rows)
                 {
-                    if (AprvType == "Y")
+                    Chk = (CheckBox)Gvr.FindControl("chkSelect");
+                    lbl = (Label)Gvr.FindControl("LblGrpID");
+                    lblReqno = (Label)Gvr.FindControl("LblReqNo");
+                    lblIdno = (Label)Gvr.FindControl("LblIdNo");
+                    LblAmount = (Label)Gvr.FindControl("lblAmount");
+                    lblPaymode = (Label)Gvr.FindControl("LblPaymode");
+                    email = ((Label)Gvr.FindControl("LblEmail")).Text;
+                    if (Chk.Checked == true && Chk.Enabled == true)
                     {
-                        Remark = " Approve Payment Request On ReqNo:" + lblReqno.Text + " for Idno:" + lblIdno.Text + "";
-                        sql = sql + "INSERT INTO TrnVoucher(VoucherNo,VoucherDate,DrTo,CrTo,Amount,Narration,RefNo,AcType,VTYpe,SessID,WSessID) SELECT ISNULL(Max(VoucherNo)+1,1001),'" + DateTime.Now.ToString("dd-MMM-yyyy") + "'," +
-                            "'0','" + lbl.Text + "'," + LblAmount.Text + ",'Amount Added by Payment  Req.No.:" + lblReqno.Text + ".','Req/" + lblReqno.Text + "','S','C',Convert(Varchar,Getdate(),112),'" + Session["CurrentSessn"] + "' FROM TrnVoucher;";
+                        if (AprvType == "Y")
+                        {
+                            Remark = " Approve Payment Request On ReqNo:" + lblReqno.Text + " for Idno:" + lblIdno.Text + "";
+                            sql = sql + "INSERT INTO TrnVoucher(VoucherNo,VoucherDate,DrTo,CrTo,Amount,Narration,RefNo,AcType,VTYpe,SessID,WSessID) SELECT ISNULL(Max(VoucherNo)+1,1001),'" + DateTime.Now.ToString("dd-MMM-yyyy") + "'," +
+                                "'0','" + lbl.Text + "'," + LblAmount.Text + ",'Amount Added by Payment  Req.No.:" + lblReqno.Text + ".','Req/" + lblReqno.Text + "','S','C',Convert(Varchar,Getdate(),112),'" + Session["CurrentSessn"] + "' FROM TrnVoucher;";
 
 
 
-                        //sql = sql + "INSERT INTO RejtVoucher(VoucherNo,VoucherDate,DrTo,CrTo,Amount,Narration,RefNo,AcType,VTYpe,SessID,WSessID,Status,Rn) SELECT ISNULL(Max(VoucherNo)+1,1001),'" + DateTime.Now.ToString("dd-MMM-yyyy") + "'," +
-                        //    "'0','" + lbl.Text + "'," + LblAmount.Text + ",'Amount Added by Payment  Req.No.:" + lblReqno.Text + ".','Req/" + lblReqno.Text + "','S','C',Convert(Varchar,Getdate(),112),'" + Session["CurrentSessn"] + "','A',1 FROM TrnVoucher;";
+                            //sql = sql + "INSERT INTO RejtVoucher(VoucherNo,VoucherDate,DrTo,CrTo,Amount,Narration,RefNo,AcType,VTYpe,SessID,WSessID,Status,Rn) SELECT ISNULL(Max(VoucherNo)+1,1001),'" + DateTime.Now.ToString("dd-MMM-yyyy") + "'," +
+                            //    "'0','" + lbl.Text + "'," + LblAmount.Text + ",'Amount Added by Payment  Req.No.:" + lblReqno.Text + ".','Req/" + lblReqno.Text + "','S','C',Convert(Varchar,Getdate(),112),'" + Session["CurrentSessn"] + "','A',1 FROM TrnVoucher;";
+                        }
+                        else
+                        {
+                            Remark = " Reject Payment Request On ReqNo:" + lblReqno.Text + " for Idno:" + lblIdno.Text + "";
+                        }
+                        sql = sql + ";Update WalletReq SET  IsApprove = '" + AprvType + "',ApproveDate=GEtdate(),ApproveBy='" + Convert.ToString(Session["UserID"]) + "',ApproveRemark='" + TxtARemark.Text + "' where FormNo='" + lbl.Text + "' And ReqNo='" + lblReqno.Text + "'";
+                        sql = sql + "; insert into UserHistory(UserId,UserName,PageName,Activity,ModifiedFlds,RecTimeStamp)Values" +
+                            "('" + Convert.ToInt32(Session["UserID"]) + "','" + Session["UserName"] + "','Approve Payment Request ','Approve Payment Request','" + Remark + "',Getdate())";
+                        Cnt = Cnt + 1;
                     }
-                    else
-                    {
-                        Remark = " Reject Payment Request On ReqNo:" + lblReqno.Text + " for Idno:" + lblIdno.Text + "";
-                    }
-                    sql = sql + ";Update WalletReq SET  IsApprove = '" + AprvType + "',ApproveDate=GEtdate(),ApproveBy='" + Convert.ToString(Session["UserID"]) + "',ApproveRemark='" + TxtARemark.Text + "' where FormNo='" + lbl.Text + "' And ReqNo='" + lblReqno.Text + "'";
-                    sql = sql + "; insert into UserHistory(UserId,UserName,PageName,Activity,ModifiedFlds,RecTimeStamp)Values" +
-                        "('" + Convert.ToInt32(Session["UserID"]) + "','" + Session["UserName"] + "','Approve Payment Request ','Approve Payment Request','" + Remark + "',Getdate())";
-                    Cnt = Cnt + 1;
+                }
+
+                String strSql = " BEGIN TRY BEGIN TRANSACTION " + sql + " COMMIT TRANSACTION  END TRY BEGIN CATCH ROLLBACK TRANSACTION END CATCH";
+                int a = Convert.ToInt32(SqlHelper.ExecuteNonQuery(constr, CommandType.Text, strSql));
+                string MsgTxt = "";
+                if (AprvType == "Y")
+                {
+                    MsgTxt = "Approved";
+                }
+                else
+                {
+                    MsgTxt = "Rejected";
+                }
+                if (a != 0 && Cnt > 0)
+                {
+                    //lblMsg.Text = "" + Cnt + " Requests " + MsgTxt + " Successfully.";
+                    //lblMsg.Visible = true;
+                    //lblMsg.ForeColor = System.Drawing.Color.Green;
+                    //TxtARemark.Text = "";
+                    //BindData();
+                    //Response.Redirect("ApprovePaymentReqs.aspx");
+                    lblMsg.Text = Cnt + " Requests " + MsgTxt + " Successfully.";
+                    lblMsg.ForeColor = System.Drawing.Color.Green;
+                    lblMsg.Visible = false;
+                    DivRemark.Visible = false;
+                    string message = Cnt + " Requests " + MsgTxt + " Successfully.";
+                    string script = "alert('" + message + "'); window.location.href='ApprovePaymentReqs.aspx';";
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "alertRedirect", script, true);
+                }
+                else
+                {
+                    //lblMsg.Text = "Not " + MsgTxt;
+                    //lblMsg.Visible = true;
+                    //lblMsg.ForeColor = System.Drawing.Color.Red;
+                    lblMsg.Text = "Not " + MsgTxt;
+                    DivRemark.Visible = false;
+                    lblMsg.ForeColor = System.Drawing.Color.Red;
+                    string message = Cnt + " Requests " + MsgTxt + " Successfully.";
+                    string script = "alert('" + message + "'); window.location.href='ApprovePaymentReqs.aspx';";
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "alertRedirect", script, true);
                 }
             }
-
-            String strSql = " BEGIN TRY BEGIN TRANSACTION " + sql + " COMMIT TRANSACTION  END TRY BEGIN CATCH ROLLBACK TRANSACTION END CATCH";
-            int a = Convert.ToInt32(SqlHelper.ExecuteNonQuery(constr, CommandType.Text, strSql));
-            string MsgTxt = "";
-            if (AprvType == "Y")
-            {
-                MsgTxt = "Approved";
-            }
             else
             {
-                MsgTxt = "Rejected";
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "Key", "alert('Try After Some Time.!');location.replace('ApprovePaymentReqs.aspx');", true);
             }
-            if (a != 0 && Cnt > 0)
-            {
-                //lblMsg.Text = "" + Cnt + " Requests " + MsgTxt + " Successfully.";
-                //lblMsg.Visible = true;
-                //lblMsg.ForeColor = System.Drawing.Color.Green;
-                //TxtARemark.Text = "";
-                //BindData();
-                //Response.Redirect("ApprovePaymentReqs.aspx");
-                lblMsg.Text = Cnt + " Requests " + MsgTxt + " Successfully.";
-                lblMsg.ForeColor = System.Drawing.Color.Green;
-                lblMsg.Visible = false;
-                DivRemark.Visible = false;
-                string message = Cnt + " Requests " + MsgTxt + " Successfully.";
-                string script = "alert('" + message + "'); window.location.href='ApprovePaymentReqs.aspx';";
-                ScriptManager.RegisterStartupScript(this, this.GetType(), "alertRedirect", script, true);
-            }
-            else
-            {
-                //lblMsg.Text = "Not " + MsgTxt;
-                //lblMsg.Visible = true;
-                //lblMsg.ForeColor = System.Drawing.Color.Red;
-                lblMsg.Text = "Not " + MsgTxt;
-                DivRemark.Visible = false;
-                lblMsg.ForeColor = System.Drawing.Color.Red;
-                string message = Cnt + " Requests " + MsgTxt + " Successfully.";
-                string script = "alert('" + message + "'); window.location.href='ApprovePaymentReqs.aspx';";
-                ScriptManager.RegisterStartupScript(this, this.GetType(), "alertRedirect", script, true);
-            }
+            
         }
         catch (Exception ex)
         {
